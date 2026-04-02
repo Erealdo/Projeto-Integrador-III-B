@@ -8,40 +8,55 @@
   <link rel="stylesheet" href="../css/base.css"/>
   <link rel="stylesheet" href="../css/layout.css"/>
   <style>
-    .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:16px; margin-bottom:24px; }
-    .stat-card { background:var(--white); border:1px solid var(--border); border-radius:var(--radius); padding:18px 20px; display:flex; align-items:center; gap:14px; }
-    .stat-icon { width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
-    .stat-icon.blue{background:#dbeafe;} .stat-icon.green{background:#dcfce7;} .stat-icon.yellow{background:#fef9c3;} .stat-icon.red{background:#fee2e2;}
-    .stat-value { font-size:1.5rem; font-weight:700; line-height:1; }
-    .stat-label { font-size:.8rem; color:var(--muted); margin-top:3px; }
-    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:24px;}
+    .stat-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;display:flex;align-items:center;gap:14px;}
+    .stat-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .stat-icon svg{width:20px;height:20px;}
+    .stat-icon.blue{background:#dbeafe;color:#2563eb;} .stat-icon.green{background:#dcfce7;color:#16a34a;} .stat-icon.yellow{background:#fef9c3;color:#d97706;} .stat-icon.red{background:#fee2e2;color:#dc2626;}
+    .stat-value{font-size:1.5rem;font-weight:700;line-height:1;}
+    .stat-label{font-size:.8rem;color:var(--muted);margin-top:3px;}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
     @media(max-width:700px){.grid-2{grid-template-columns:1fr;}}
-    .section-card { background:var(--white); border:1px solid var(--border); border-radius:var(--radius); }
-    .section-header { display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:1px solid var(--border); }
-    .section-header h3 { font-size:.9rem; font-weight:600; }
-    .section-body { padding:14px 18px; }
-    .task-row { display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--border); }
+    .section-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);}
+    .section-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);}
+    .section-header h3{font-size:.9rem;font-weight:600;}
+    .section-body{padding:14px 18px;}
+    .task-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
     .task-row:last-child{border-bottom:none;}
-    .task-row-title { flex:1; font-size:.875rem; font-weight:500; }
-    .task-row-project { font-size:.75rem; color:var(--muted); }
-    .project-row { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border); cursor:pointer; }
+    .task-row-title{flex:1;font-size:.875rem;font-weight:500;}
+    .task-row-project{font-size:.75rem;color:var(--muted);}
+    .project-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;}
     .project-row:last-child{border-bottom:none;}
-    .project-color-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
-    .project-row-name { flex:1; font-size:.875rem; font-weight:500; }
-    .progress-bar { height:4px; background:var(--border); border-radius:99px; margin-top:4px; }
-    .progress-fill { height:100%; border-radius:99px; background:var(--accent); }
+    .project-color-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+    .project-row-name{flex:1;font-size:.875rem;font-weight:500;}
+    .progress-bar{height:4px;background:var(--border);border-radius:99px;margin-top:4px;}
+    .progress-fill{height:100%;border-radius:99px;}
   </style>
 </head>
 <body>
 <div class="app-shell">
   <aside class="sidebar">
-    <div class="sidebar-brand"><div style="font-size:1.15rem;font-weight:700;letter-spacing:-.3px">Woork<span style="color:var(--accent)">Flow</span></div></div>
+    <div class="sidebar-brand">
+      <div style="font-size:1.15rem;font-weight:700;letter-spacing:-.3px">Woork<span style="color:var(--accent)">Flow</span></div>
+    </div>
     <nav class="sidebar-nav">
       <div class="nav-section-label">Principal</div>
-      <div class="nav-item active" onclick="location.href='dashboard.html'"><span class="nav-icon">🏠</span> Dashboard</div>
-      <div class="nav-item" onclick="location.href='projects.html'"><span class="nav-icon">📁</span> Projetos</div>
-      <div class="nav-item" onclick="location.href='kanban.html'"><span class="nav-icon">📋</span> Kanban</div>
-      <div class="nav-item" onclick="location.href='calendar.html'"><span class="nav-icon">📅</span> Calendário</div>
+      <div class="nav-item active" onclick="location.href='dashboard.html'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        Dashboard
+      </div>
+      <div class="nav-item" onclick="location.href='projects.html'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/></svg>
+        Projetos
+      </div>
+      <div class="nav-item" onclick="location.href='kanban.html'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>
+        Kanban
+      </div>
+      <div class="nav-item" onclick="location.href='calendar.html'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        Calendário
+      </div>
     </nav>
     <div class="sidebar-user">
       <div class="user-avatar" id="sidebar-avatar">--</div>
@@ -49,13 +64,17 @@
         <div class="user-name" id="sidebar-name">—</div>
         <div class="user-email" id="sidebar-email">—</div>
       </div>
-      <button class="btn-logout" onclick="doLogout()" title="Sair">🚪</button>
+      <button class="btn-logout" onclick="doLogout()" title="Sair">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+      </button>
     </div>
   </aside>
   <div class="sidebar-overlay"></div>
   <div class="main-content">
     <header class="top-header">
-      <button class="btn-menu">☰</button>
+      <button class="btn-menu" id="btnMenu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
       <span class="header-title">Dashboard</span>
       <div class="header-actions">
         <button class="btn btn-primary btn-sm" onclick="location.href='projects.html'">+ Novo projeto</button>
@@ -63,14 +82,14 @@
     </header>
     <main class="page-area">
       <div class="page-header">
-        <div><h2 id="welcomeMsg">Olá! 👋</h2><p>Aqui está o resumo de hoje.</p></div>
+        <div><h2 id="welcomeMsg">Olá!</h2><p>Aqui está o resumo de hoje.</p></div>
       </div>
       <div class="stats-grid">
-        <div class="stat-card"><div class="stat-icon blue">📁</div><div><div class="stat-value" id="statProjects">—</div><div class="stat-label">Projetos</div></div></div>
-        <div class="stat-card"><div class="stat-icon yellow">📋</div><div><div class="stat-value" id="statTasks">—</div><div class="stat-label">Tarefas totais</div></div></div>
-        <div class="stat-card"><div class="stat-icon blue">⏳</div><div><div class="stat-value" id="statDoing">—</div><div class="stat-label">Em andamento</div></div></div>
-        <div class="stat-card"><div class="stat-icon green">✅</div><div><div class="stat-value" id="statDone">—</div><div class="stat-label">Concluídas</div></div></div>
-        <div class="stat-card"><div class="stat-icon red">⚠️</div><div><div class="stat-value" id="statOverdue">—</div><div class="stat-label">Atrasadas</div></div></div>
+        <div class="stat-card"><div class="stat-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/></svg></div><div><div class="stat-value" id="statProjects">—</div><div class="stat-label">Projetos</div></div></div>
+        <div class="stat-card"><div class="stat-icon yellow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg></div><div><div class="stat-value" id="statTasks">—</div><div class="stat-label">Tarefas totais</div></div></div>
+        <div class="stat-card"><div class="stat-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><div><div class="stat-value" id="statDoing">—</div><div class="stat-label">Em andamento</div></div></div>
+        <div class="stat-card"><div class="stat-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div><div><div class="stat-value" id="statDone">—</div><div class="stat-label">Concluídas</div></div></div>
+        <div class="stat-card"><div class="stat-icon red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg></div><div><div class="stat-value" id="statOverdue">—</div><div class="stat-label">Atrasadas</div></div></div>
       </div>
       <div class="grid-2">
         <div class="section-card">
@@ -90,73 +109,43 @@
 <script src="../js/ui.js"></script>
 <script>
   if (!isLoggedIn()) window.location.href = '../index.html';
-
   const user = getUser();
-  document.getElementById('welcomeMsg').textContent   = `Olá, ${user?.name?.split(' ')[0] || ''}! 👋`;
+  document.getElementById('welcomeMsg').textContent    = `Olá, ${user?.name?.split(' ')[0] || ''}!`;
   document.getElementById('sidebar-name').textContent  = user?.name  || '—';
   document.getElementById('sidebar-email').textContent = user?.email || '—';
-  document.getElementById('sidebar-avatar').textContent = user?.avatar || makeAvatar(user?.name || '');
-
-  function makeAvatar(n) { const p=n.trim().split(' '); return ((p[0]?.[0]||'')+(p[1]?.[0]||'')).toUpperCase(); }
-  function doLogout() { clearSession(); window.location.href='../index.html'; }
-
-  // Mobile sidebar
-  document.querySelector('.btn-menu').addEventListener('click', () => {
-    document.querySelector('.sidebar').classList.toggle('open');
-    document.querySelector('.sidebar-overlay').classList.toggle('show');
-  });
-  document.querySelector('.sidebar-overlay').addEventListener('click', () => {
-    document.querySelector('.sidebar').classList.remove('open');
-    document.querySelector('.sidebar-overlay').classList.remove('show');
-  });
-
-  function statusLabel(s){ return {todo:'A fazer',doing:'Em andamento',done:'Concluído'}[s]||s; }
-  function priorityLabel(p){ return {alta:'Alta',media:'Média',baixa:'Baixa'}[p]||p; }
-  function fmtDate(d){ if(!d)return'—'; return new Date(d).toLocaleDateString('pt-BR'); }
-  function isOverdue(d){ return d && new Date(d)<new Date(); }
-
-  async function loadDashboard() {
-    const [pRes, tRes] = await Promise.all([getProjects(), getUserTasks()]);
-    const projects = pRes.ok ? pRes.data.projects : [];
-    const tasks    = tRes.ok ? tRes.data.tasks    : [];
-
-    const now = new Date();
-    document.getElementById('statProjects').textContent = projects.length;
-    document.getElementById('statTasks').textContent    = tasks.length;
-    document.getElementById('statDoing').textContent    = tasks.filter(t=>t.status==='doing').length;
-    document.getElementById('statDone').textContent     = tasks.filter(t=>t.status==='done').length;
-    document.getElementById('statOverdue').textContent  = tasks.filter(t=>t.deadline && new Date(t.deadline)<now && t.status!=='done').length;
-
-    // Recent tasks
-    const recent = [...tasks].slice(0,5);
-    const tasksEl = document.getElementById('recentTasks');
-    tasksEl.innerHTML = recent.length ? recent.map(t=>`
+  document.getElementById('sidebar-avatar').textContent = user?.avatar || '';
+  function doLogout(){ clearSession(); window.location.href='../index.html'; }
+  document.getElementById('btnMenu').addEventListener('click',()=>{document.querySelector('.sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('show');});
+  document.querySelector('.sidebar-overlay').addEventListener('click',()=>{document.querySelector('.sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('show');});
+  function statusLabel(s){return{todo:'A fazer',doing:'Em andamento',done:'Concluído'}[s]||s;}
+  function priorityLabel(p){return{alta:'Alta',media:'Média',baixa:'Baixa'}[p]||p;}
+  function fmtDate(d){if(!d)return'—';return new Date(d).toLocaleDateString('pt-BR');}
+  async function loadDashboard(){
+    const [pRes,tRes]=await Promise.all([getProjects(),getUserTasks()]);
+    const projects=pRes.ok?pRes.data.projects:[];
+    const tasks=tRes.ok?tRes.data.tasks:[];
+    const now=new Date();
+    document.getElementById('statProjects').textContent=projects.length;
+    document.getElementById('statTasks').textContent=tasks.length;
+    document.getElementById('statDoing').textContent=tasks.filter(t=>t.status==='doing').length;
+    document.getElementById('statDone').textContent=tasks.filter(t=>t.status==='done').length;
+    document.getElementById('statOverdue').textContent=tasks.filter(t=>t.deadline&&new Date(t.deadline)<now&&t.status!=='done').length;
+    const tasksEl=document.getElementById('recentTasks');
+    tasksEl.innerHTML=tasks.slice(0,5).length?tasks.slice(0,5).map(t=>`
       <div class="task-row">
         <span class="badge ${t.status==='done'?'badge-green':t.status==='doing'?'badge-blue':'badge-gray'}">${statusLabel(t.status)}</span>
         <div style="flex:1"><div class="task-row-title">${t.title}</div><div class="task-row-project">${t.project_name||'—'}</div></div>
         <span style="font-size:.75rem;color:var(--muted)">${priorityLabel(t.priority)}</span>
-      </div>`).join('')
-    : '<div style="text-align:center;padding:20px;color:var(--muted)">Nenhuma tarefa ainda.</div>';
-
-    // Projects
-    const projEl = document.getElementById('activeProjects');
-    projEl.innerHTML = projects.length ? projects.slice(0,5).map(p=>{
-      const pct = p.task_count ? Math.round((p.done_count/p.task_count)*100) : 0;
-      return `<div class="project-row" onclick="location.href='kanban.html?project=${p.id}'">
+      </div>`).join(''):'<div style="text-align:center;padding:20px;color:var(--muted)">Nenhuma tarefa ainda.</div>';
+    const projEl=document.getElementById('activeProjects');
+    projEl.innerHTML=projects.slice(0,5).length?projects.slice(0,5).map(p=>{
+      const pct=p.task_count?Math.round((p.done_count/p.task_count)*100):0;
+      return`<div class="project-row" onclick="location.href='kanban.html?project=${p.id}'">
         <div class="project-color-dot" style="background:${p.color}"></div>
-        <div style="flex:1">
-          <div class="project-row-name">${p.name}</div>
-          <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${p.color}"></div></div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-size:.75rem;color:var(--muted)">${fmtDate(p.deadline)}</div>
-          <div style="font-size:.75rem;color:var(--muted)">${p.done_count}/${p.task_count}</div>
-        </div>
-      </div>`;
-    }).join('')
-    : '<div style="text-align:center;padding:20px;color:var(--muted)">Nenhum projeto ainda.</div>';
+        <div style="flex:1"><div class="project-row-name">${p.name}</div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${p.color}"></div></div></div>
+        <div style="text-align:right"><div style="font-size:.75rem;color:var(--muted)">${fmtDate(p.deadline)}</div><div style="font-size:.75rem;color:var(--muted)">${p.done_count||0}/${p.task_count||0}</div></div>
+      </div>`;}).join(''):'<div style="text-align:center;padding:20px;color:var(--muted)">Nenhum projeto ainda.</div>';
   }
-
   loadDashboard();
 </script>
 </body>

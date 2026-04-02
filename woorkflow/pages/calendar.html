@@ -12,13 +12,27 @@
 <body>
 <div class="app-shell">
   <aside class="sidebar">
-    <div class="sidebar-brand"><div style="font-size:1.15rem;font-weight:700;letter-spacing:-.3px">Woork<span style="color:var(--accent)">Flow</span></div></div>
+    <div class="sidebar-brand">
+      <div style="font-size:1.15rem;font-weight:700;letter-spacing:-.3px">Woork<span style="color:var(--accent)">Flow</span></div>
+    </div>
     <nav class="sidebar-nav">
       <div class="nav-section-label">Principal</div>
-      <div class="nav-item" onclick="location.href='dashboard.html'"><span class="nav-icon">🏠</span> Dashboard</div>
-      <div class="nav-item" onclick="location.href='projects.html'"><span class="nav-icon">📁</span> Projetos</div>
-      <div class="nav-item" onclick="location.href='kanban.html'"><span class="nav-icon">📋</span> Kanban</div>
-      <div class="nav-item active" onclick="location.href='calendar.html'"><span class="nav-icon">📅</span> Calendário</div>
+      <div class="nav-item " onclick="location.href='dashboard.html'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        Dashboard
+      </div>
+      <div class="nav-item " onclick="location.href='projects.html'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/></svg>
+        Projetos
+      </div>
+      <div class="nav-item " onclick="location.href='kanban.html'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>
+        Kanban
+      </div>
+      <div class="nav-item active" onclick="location.href='calendar.html'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        Calendário
+      </div>
     </nav>
     <div class="sidebar-user">
       <div class="user-avatar" id="sidebar-avatar">--</div>
@@ -26,13 +40,17 @@
         <div class="user-name" id="sidebar-name">—</div>
         <div class="user-email" id="sidebar-email">—</div>
       </div>
-      <button class="btn-logout" onclick="doLogout()" title="Sair">🚪</button>
+      <button class="btn-logout" onclick="doLogout()" title="Sair">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+      </button>
     </div>
   </aside>
   <div class="sidebar-overlay"></div>
   <div class="main-content">
     <header class="top-header">
-      <button class="btn-menu">☰</button>
+      <button class="btn-menu" id="btnMenu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
       <span class="header-title">Calendário</span>
     </header>
     <main class="page-area">
@@ -41,9 +59,9 @@
         <div class="calendar-card">
           <div class="calendar-nav">
             <div class="cal-nav-btns">
-              <button onclick="changeMonth(-1)">‹</button>
+              <button onclick="changeMonth(-1)">&#8249;</button>
               <button onclick="goToday()">Hoje</button>
-              <button onclick="changeMonth(1)">›</button>
+              <button onclick="changeMonth(1)">&#8250;</button>
             </div>
             <h3 id="calMonthLabel">—</h3>
           </div>
@@ -75,111 +93,59 @@
   document.getElementById('sidebar-email').textContent = user?.email || '—';
   document.getElementById('sidebar-avatar').textContent = user?.avatar || '';
   function doLogout(){ clearSession(); window.location.href='../index.html'; }
-  document.querySelector('.btn-menu').addEventListener('click',()=>{document.querySelector('.sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('show');});
+  document.getElementById('btnMenu').addEventListener('click',()=>{document.querySelector('.sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('show');});
   document.querySelector('.sidebar-overlay').addEventListener('click',()=>{document.querySelector('.sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('show');});
-
-  const MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-  const today  = new Date();
-  let curYear  = today.getFullYear();
-  let curMonth = today.getMonth();
-  let selDate  = null;
-  let eventsMap = {};
-
-  function statusLabel(s){ return {todo:'A fazer',doing:'Em andamento',done:'Concluído'}[s]||s; }
-
-  async function loadEvents() {
-    const [tRes, pRes] = await Promise.all([getUserTasks(), getProjects()]);
-    eventsMap = {};
-    const add = (dateStr, item) => {
-      if (!dateStr) return;
-      const key = dateStr.slice(0,10);
-      if (!eventsMap[key]) eventsMap[key] = [];
-      eventsMap[key].push(item);
-    };
-    if (tRes.ok) tRes.data.tasks.forEach(t => {
-      if (!t.deadline) return;
-      const over = new Date(t.deadline)<new Date() && t.status!=='done';
-      add(t.deadline, { type: over?'overdue':'task', title:t.title, sub:t.project_name||'', status:t.status });
-    });
-    if (pRes.ok) pRes.data.projects.forEach(p => {
-      if (!p.deadline) return;
-      add(p.deadline, { type:'project', title:`📁 ${p.name}`, sub:'Prazo do projeto' });
-    });
+  const MONTHS=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const today=new Date();
+  let curYear=today.getFullYear(),curMonth=today.getMonth(),selDate=null,eventsMap={};
+  function statusLabel(s){return{todo:'A fazer',doing:'Em andamento',done:'Concluído'}[s]||s;}
+  async function loadEvents(){
+    const [tRes,pRes]=await Promise.all([getUserTasks(),getProjects()]);
+    eventsMap={};
+    const add=(dateStr,item)=>{if(!dateStr)return;const key=dateStr.slice(0,10);if(!eventsMap[key])eventsMap[key]=[];eventsMap[key].push(item);};
+    if(tRes.ok)tRes.data.tasks.forEach(t=>{if(!t.deadline)return;const over=new Date(t.deadline)<new Date()&&t.status!=='done';add(t.deadline,{type:over?'overdue':'task',title:t.title,sub:t.project_name||'',status:t.status});});
+    if(pRes.ok)pRes.data.projects.forEach(p=>{if(!p.deadline)return;add(p.deadline,{type:'project',title:`Projeto: ${p.name}`,sub:'Prazo do projeto'});});
     renderCalendar();
-    selectDay(today.getFullYear(), today.getMonth(), today.getDate());
+    selectDay(today.getFullYear(),today.getMonth(),today.getDate());
   }
-
-  function renderCalendar() {
-    document.getElementById('calMonthLabel').textContent = `${MONTHS[curMonth]} ${curYear}`;
-    const firstDay = new Date(curYear,curMonth,1).getDay();
-    const daysInMonth = new Date(curYear,curMonth+1,0).getDate();
-    const daysInPrev  = new Date(curYear,curMonth,0).getDate();
-    let html = ''; let dayCount = 0;
-    for (let i=firstDay-1;i>=0;i--){ html+=dayCell(curYear,curMonth-1,daysInPrev-i,true); dayCount++; }
-    for (let d=1;d<=daysInMonth;d++){ html+=dayCell(curYear,curMonth,d,false); dayCount++; }
-    let next=1; while(dayCount%7!==0){ html+=dayCell(curYear,curMonth+1,next++,true); dayCount++; }
-    document.getElementById('calDays').innerHTML = html;
+  function renderCalendar(){
+    document.getElementById('calMonthLabel').textContent=`${MONTHS[curMonth]} ${curYear}`;
+    const firstDay=new Date(curYear,curMonth,1).getDay();
+    const daysInMonth=new Date(curYear,curMonth+1,0).getDate();
+    const daysInPrev=new Date(curYear,curMonth,0).getDate();
+    let html='',dayCount=0;
+    for(let i=firstDay-1;i>=0;i--){html+=dayCell(curYear,curMonth-1,daysInPrev-i,true);dayCount++;}
+    for(let d=1;d<=daysInMonth;d++){html+=dayCell(curYear,curMonth,d,false);dayCount++;}
+    let next=1;while(dayCount%7!==0){html+=dayCell(curYear,curMonth+1,next++,true);dayCount++;}
+    document.getElementById('calDays').innerHTML=html;
     renderUpcoming();
   }
-
-  function dayCell(year,month,day,otherMonth) {
-    const date = new Date(year,month,day);
-    const key  = date.toISOString().slice(0,10);
-    const isToday = date.toDateString()===today.toDateString();
-    const isSel   = selDate && date.toDateString()===selDate.toDateString();
-    const evts    = eventsMap[key]||[];
-    const cls = ['cal-day', otherMonth?'other-month':'', isToday?'today':'', isSel?'selected':''].filter(Boolean).join(' ');
-    const dots = evts.slice(0,3).map(e=>`<div class="cal-event-dot ${e.type}" title="${e.title}">${e.title.slice(0,16)}</div>`).join('');
-    return `<div class="${cls}" onclick="selectDay(${date.getFullYear()},${date.getMonth()},${date.getDate()})">
-      <div class="cal-day-num">${day}</div>
-      <div class="cal-events">${dots}</div>
-    </div>`;
+  function dayCell(year,month,day,otherMonth){
+    const date=new Date(year,month,day);
+    const key=date.toISOString().slice(0,10);
+    const isToday=date.toDateString()===today.toDateString();
+    const isSel=selDate&&date.toDateString()===selDate.toDateString();
+    const evts=eventsMap[key]||[];
+    const cls=['cal-day',otherMonth?'other-month':'',isToday?'today':'',isSel?'selected':''].filter(Boolean).join(' ');
+    const dots=evts.slice(0,3).map(e=>`<div class="cal-event-dot ${e.type}" title="${e.title}">${e.title.slice(0,16)}</div>`).join('');
+    return`<div class="${cls}" onclick="selectDay(${date.getFullYear()},${date.getMonth()},${date.getDate()})"><div class="cal-day-num">${day}</div><div class="cal-events">${dots}</div></div>`;
   }
-
-  function selectDay(year,month,day) {
-    selDate = new Date(year,month,day);
-    const key  = selDate.toISOString().slice(0,10);
-    const evts = eventsMap[key]||[];
-    document.getElementById('selectedDayLabel').textContent = selDate.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
-    const container = document.getElementById('selectedDayEvents');
-    container.innerHTML = evts.length ? evts.map(e=>`
-      <div class="cal-day-event-item">
-        <div class="event-dot ${e.type}"></div>
-        <div class="event-info">
-          <div class="event-title">${e.title}</div>
-          ${e.sub?`<div class="event-meta">${e.sub}</div>`:''}
-          ${e.status?`<div class="event-meta">${statusLabel(e.status)}</div>`:''}
-        </div>
-      </div>`).join('')
-    : '<div class="cal-no-events">Nenhum evento neste dia.</div>';
+  function selectDay(year,month,day){
+    selDate=new Date(year,month,day);
+    const key=selDate.toISOString().slice(0,10);
+    const evts=eventsMap[key]||[];
+    document.getElementById('selectedDayLabel').textContent=selDate.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
+    document.getElementById('selectedDayEvents').innerHTML=evts.length?evts.map(e=>`<div class="cal-day-event-item"><div class="event-dot ${e.type}"></div><div class="event-info"><div class="event-title">${e.title}</div>${e.sub?`<div class="event-meta">${e.sub}</div>`:''}${e.status?`<div class="event-meta">${statusLabel(e.status)}</div>`:''}</div></div>`).join(''):'<div class="cal-no-events">Nenhum evento neste dia.</div>';
     renderCalendar();
   }
-
-  function renderUpcoming() {
-    const now = new Date();
-    const list = [];
-    Object.entries(eventsMap).forEach(([key,evts]) => {
-      const d = new Date(key);
-      if (d>=now) evts.forEach(e=>list.push({date:d,...e}));
-    });
+  function renderUpcoming(){
+    const now=new Date(),list=[];
+    Object.entries(eventsMap).forEach(([key,evts])=>{const d=new Date(key);if(d>=now)evts.forEach(e=>list.push({date:d,...e}));});
     list.sort((a,b)=>a.date-b.date);
-    const el = document.getElementById('upcomingList');
-    el.innerHTML = list.slice(0,6).map(item=>`
-      <div class="upcoming-item">
-        <div class="up-date"><div class="up-day">${item.date.getDate()}</div><div class="up-month">${MONTHS[item.date.getMonth()].slice(0,3)}</div></div>
-        <div class="up-info"><div class="up-title">${item.title}</div><div class="up-sub">${item.sub||''}</div></div>
-        <div class="event-dot ${item.type}" style="width:8px;height:8px;border-radius:50%;flex-shrink:0"></div>
-      </div>`).join('') || '<div class="cal-no-events">Nenhum prazo próximo.</div>';
+    document.getElementById('upcomingList').innerHTML=list.slice(0,6).map(item=>`<div class="upcoming-item"><div class="up-date"><div class="up-day">${item.date.getDate()}</div><div class="up-month">${MONTHS[item.date.getMonth()].slice(0,3)}</div></div><div class="up-info"><div class="up-title">${item.title}</div><div class="up-sub">${item.sub||''}</div></div><div class="event-dot ${item.type}" style="width:8px;height:8px;border-radius:50%;flex-shrink:0"></div></div>`).join('')||'<div class="cal-no-events">Nenhum prazo próximo.</div>';
   }
-
-  function changeMonth(dir) {
-    curMonth+=dir;
-    if(curMonth>11){curMonth=0;curYear++;}
-    if(curMonth<0){curMonth=11;curYear--;}
-    renderCalendar();
-  }
-  function goToday() { curYear=today.getFullYear(); curMonth=today.getMonth(); selDate=today; renderCalendar(); selectDay(today.getFullYear(),today.getMonth(),today.getDate()); }
-
+  function changeMonth(dir){curMonth+=dir;if(curMonth>11){curMonth=0;curYear++;}if(curMonth<0){curMonth=11;curYear--;}renderCalendar();}
+  function goToday(){curYear=today.getFullYear();curMonth=today.getMonth();selDate=today;renderCalendar();selectDay(today.getFullYear(),today.getMonth(),today.getDate());}
   loadEvents();
 </script>
 </body>
