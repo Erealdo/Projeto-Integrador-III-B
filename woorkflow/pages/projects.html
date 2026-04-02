@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WoorkFlow — Projetos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/base.css"/>
+  <link rel="stylesheet" href="../css/layout.css"/>
+  <style>
+    .projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
+    .project-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:box-shadow .15s;cursor:pointer;}
+    .project-card:hover{box-shadow:var(--shadow);}
+    .project-card-top{height:6px;}
+    .project-card-body{padding:16px;}
+    .project-card-name{font-size:.95rem;font-weight:600;margin-bottom:4px;}
+    .project-card-desc{font-size:.8rem;color:var(--muted);margin-bottom:12px;line-height:1.4;min-height:32px;}
+    .project-card-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+    .project-card-deadline{font-size:.75rem;color:var(--muted);}
+    .progress-bar{height:5px;background:var(--border);border-radius:99px;margin-bottom:8px;}
+    .progress-fill{height:100%;border-radius:99px;transition:width .4s;}
+    .project-card-footer{display:flex;align-items:center;justify-content:space-between;font-size:.8rem;color:var(--muted);}
+    .project-card-actions{display:flex;gap:4px;}
+    .color-options{display:flex;gap:8px;flex-wrap:wrap;}
+    .color-opt{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform .15s;}
+    .color-opt:hover{transform:scale(1.15);}
+    .color-opt.selected{border-color:var(--text);}
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><div style="font-size:1.15rem;font-weight:700;letter-spacing:-.3px">Woork<span style="color:var(--accent)">Flow</span></div></div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Principal</div>
+      <div class="nav-item" onclick="location.href='dashboard.html'"><span class="nav-icon">🏠</span> Dashboard</div>
+      <div class="nav-item active" onclick="location.href='projects.html'"><span class="nav-icon">📁</span> Projetos</div>
+      <div class="nav-item" onclick="location.href='kanban.html'"><span class="nav-icon">📋</span> Kanban</div>
+      <div class="nav-item" onclick="location.href='calendar.html'"><span class="nav-icon">📅</span> Calendário</div>
+    </nav>
+    <div class="sidebar-user">
+      <div class="user-avatar" id="sidebar-avatar">--</div>
+      <div class="user-info">
+        <div class="user-name" id="sidebar-name">—</div>
+        <div class="user-email" id="sidebar-email">—</div>
+      </div>
+      <button class="btn-logout" onclick="doLogout()" title="Sair">🚪</button>
+    </div>
+  </aside>
+  <div class="sidebar-overlay"></div>
+  <div class="main-content">
+    <header class="top-header">
+      <button class="btn-menu">☰</button>
+      <span class="header-title">Projetos</span>
+      <div class="header-actions">
+        <button class="btn btn-primary btn-sm" onclick="openNewProject()">+ Novo projeto</button>
+      </div>
+    </header>
+    <main class="page-area">
+      <div class="page-header"><div><h2>Meus Projetos</h2><p>Crie e gerencie seus projetos.</p></div></div>
+      <div class="projects-grid" id="projectsGrid"><div style="text-align:center;padding:40px;color:var(--muted)">Carregando…</div></div>
+    </main>
+  </div>
+</div>
+
+<!-- Modal projeto -->
+<div class="modal-overlay hidden" id="modalProject">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalProjectTitle">Novo Projeto</h3>
+      <button class="btn-icon" onclick="closeModal('modalProject')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editProjectId"/>
+      <div class="field"><label>Nome *</label><input type="text" id="projName" placeholder="Ex: Site institucional"/></div>
+      <div class="field"><label>Descrição</label><textarea id="projDesc" placeholder="Objetivo do projeto…"></textarea></div>
+      <div class="field"><label>Prazo</label><input type="date" id="projDeadline"/></div>
+      <div class="field"><label>Cor</label><div class="color-options" id="colorOptions"></div></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modalProject')">Cancelar</button>
+      <button class="btn btn-primary" id="saveProjectBtn" onclick="saveProject()">
+        <span class="btn-text">Salvar</span><div class="spinner"></div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal excluir -->
+<div class="modal-overlay hidden" id="modalDelete">
+  <div class="modal">
+    <div class="modal-header"><h3>Excluir projeto</h3><button class="btn-icon" onclick="closeModal('modalDelete')">✕</button></div>
+    <div class="modal-body"><p style="font-size:.9rem">Excluir <strong id="deleteProjectName"></strong>? Todas as tarefas serão removidas.</p></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modalDelete')">Cancelar</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="../js/api.js"></script>
+<script src="../js/ui.js"></script>
+<script>
+  if (!isLoggedIn()) window.location.href = '../index.html';
+  const user = getUser();
+  document.getElementById('sidebar-name').textContent  = user?.name  || '—';
+  document.getElementById('sidebar-email').textContent = user?.email || '—';
+  document.getElementById('sidebar-avatar').textContent = user?.avatar || '';
+  function doLogout(){ clearSession(); window.location.href='../index.html'; }
+  document.querySelector('.btn-menu').addEventListener('click',()=>{document.querySelector('.sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('show');});
+  document.querySelector('.sidebar-overlay').addEventListener('click',()=>{document.querySelector('.sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('show');});
+
+  const COLORS = ['#2563eb','#16a34a','#d97706','#dc2626','#7c3aed','#0891b2','#db2777','#374151'];
+  let selectedColor = COLORS[0];
+  let deleteTargetId = null;
+  let allProjects = [];
+
+  // Build color picker
+  COLORS.forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'color-opt' + (c===selectedColor?' selected':'');
+    div.style.background = c;
+    div.onclick = () => { selectedColor=c; document.querySelectorAll('.color-opt').forEach(e=>e.classList.remove('selected')); div.classList.add('selected'); };
+    document.getElementById('colorOptions').appendChild(div);
+  });
+
+  function fmtDate(d){ if(!d)return'Sem prazo'; return new Date(d).toLocaleDateString('pt-BR'); }
+
+  async function loadProjects() {
+    const res = await getProjects();
+    allProjects = res.ok ? res.data.projects : [];
+    renderProjects();
+  }
+
+  function renderProjects() {
+    const grid = document.getElementById('projectsGrid');
+    if (!allProjects.length) { grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)">Nenhum projeto ainda. Crie o primeiro!</div>'; return; }
+    grid.innerHTML = allProjects.map(p => {
+      const pct = p.task_count ? Math.round((p.done_count/p.task_count)*100) : 0;
+      return `<div class="project-card">
+        <div class="project-card-top" style="background:${p.color}"></div>
+        <div class="project-card-body">
+          <div class="project-card-name">${p.name}</div>
+          <div class="project-card-desc">${p.description||'<em>Sem descrição</em>'}</div>
+          <div class="project-card-meta">
+            <span class="project-card-deadline">📅 ${fmtDate(p.deadline)}</span>
+            <span style="font-size:.8rem;color:var(--muted)">${p.task_count||0} tarefa(s)</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${p.color}"></div></div>
+          <div class="project-card-footer">
+            <span>${pct}% concluído</span>
+            <div class="project-card-actions">
+              <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation();location.href='kanban.html?project=${p.id}'">Kanban</button>
+              <button class="btn-icon" onclick="event.stopPropagation();editProject(${p.id})">✏️</button>
+              <button class="btn-icon" onclick="event.stopPropagation();askDelete(${p.id},'${p.name.replace(/'/g,"\\'")}')">🗑️</button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function openNewProject() {
+    document.getElementById('modalProjectTitle').textContent = 'Novo Projeto';
+    document.getElementById('editProjectId').value = '';
+    document.getElementById('projName').value = '';
+    document.getElementById('projDesc').value = '';
+    document.getElementById('projDeadline').value = '';
+    selectedColor = COLORS[0];
+    document.querySelectorAll('.color-opt').forEach((el,i)=>el.classList.toggle('selected',i===0));
+    document.getElementById('modalProject').classList.remove('hidden');
+  }
+
+  function editProject(id) {
+    const p = allProjects.find(p=>p.id===id); if(!p)return;
+    document.getElementById('modalProjectTitle').textContent = 'Editar Projeto';
+    document.getElementById('editProjectId').value = p.id;
+    document.getElementById('projName').value = p.name;
+    document.getElementById('projDesc').value = p.description||'';
+    document.getElementById('projDeadline').value = p.deadline?p.deadline.slice(0,10):'';
+    selectedColor = p.color;
+    document.querySelectorAll('.color-opt').forEach(el=>el.classList.toggle('selected',el.style.backgroundColor===p.color||el.style.background===p.color));
+    document.getElementById('modalProject').classList.remove('hidden');
+  }
+
+  async function saveProject() {
+    const name     = document.getElementById('projName').value.trim();
+    const desc     = document.getElementById('projDesc').value.trim();
+    const deadline = document.getElementById('projDeadline').value;
+    const editId   = document.getElementById('editProjectId').value;
+    if (!name) return showToast('Informe o nome do projeto.','error');
+    const btn = document.getElementById('saveProjectBtn');
+    btn.classList.add('loading'); btn.disabled=true;
+    const payload = { name, description:desc, color:selectedColor, deadline:deadline||null };
+    const res = editId ? await updateProject(Number(editId),payload) : await createProject(payload);
+    btn.classList.remove('loading'); btn.disabled=false;
+    if (!res.ok) return showToast(res.data.error||'Erro ao salvar.','error');
+    showToast(editId?'Projeto atualizado!':'Projeto criado!','success');
+    closeModal('modalProject');
+    loadProjects();
+  }
+
+  function askDelete(id,name) { deleteTargetId=id; document.getElementById('deleteProjectName').textContent=name; document.getElementById('modalDelete').classList.remove('hidden'); }
+
+  async function confirmDelete() {
+    await deleteProject(deleteTargetId);
+    closeModal('modalDelete');
+    showToast('Projeto excluído.','error');
+    loadProjects();
+  }
+
+  function closeModal(id){ document.getElementById(id).classList.add('hidden'); }
+  document.querySelectorAll('.modal-overlay').forEach(el=>el.addEventListener('click',e=>{if(e.target===el)el.classList.add('hidden');}));
+
+  loadProjects();
+</script>
+</body>
+</html>

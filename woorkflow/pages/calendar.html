@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WoorkFlow — Calendário</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/base.css"/>
+  <link rel="stylesheet" href="../css/layout.css"/>
+  <link rel="stylesheet" href="../css/calendar.css"/>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><div style="font-size:1.15rem;font-weight:700;letter-spacing:-.3px">Woork<span style="color:var(--accent)">Flow</span></div></div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Principal</div>
+      <div class="nav-item" onclick="location.href='dashboard.html'"><span class="nav-icon">🏠</span> Dashboard</div>
+      <div class="nav-item" onclick="location.href='projects.html'"><span class="nav-icon">📁</span> Projetos</div>
+      <div class="nav-item" onclick="location.href='kanban.html'"><span class="nav-icon">📋</span> Kanban</div>
+      <div class="nav-item active" onclick="location.href='calendar.html'"><span class="nav-icon">📅</span> Calendário</div>
+    </nav>
+    <div class="sidebar-user">
+      <div class="user-avatar" id="sidebar-avatar">--</div>
+      <div class="user-info">
+        <div class="user-name" id="sidebar-name">—</div>
+        <div class="user-email" id="sidebar-email">—</div>
+      </div>
+      <button class="btn-logout" onclick="doLogout()" title="Sair">🚪</button>
+    </div>
+  </aside>
+  <div class="sidebar-overlay"></div>
+  <div class="main-content">
+    <header class="top-header">
+      <button class="btn-menu">☰</button>
+      <span class="header-title">Calendário</span>
+    </header>
+    <main class="page-area">
+      <div class="page-header"><div><h2>Calendário</h2><p>Visualize prazos de tarefas e projetos.</p></div></div>
+      <div class="calendar-wrapper">
+        <div class="calendar-card">
+          <div class="calendar-nav">
+            <div class="cal-nav-btns">
+              <button onclick="changeMonth(-1)">‹</button>
+              <button onclick="goToday()">Hoje</button>
+              <button onclick="changeMonth(1)">›</button>
+            </div>
+            <h3 id="calMonthLabel">—</h3>
+          </div>
+          <div class="calendar-grid">
+            <div class="cal-weekdays"><span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span></div>
+            <div class="cal-days" id="calDays"></div>
+          </div>
+        </div>
+        <div class="calendar-side">
+          <div class="cal-selected-day">
+            <h4 id="selectedDayLabel">Selecione um dia</h4>
+            <div class="cal-day-events" id="selectedDayEvents"><div class="cal-no-events">Clique em um dia para ver os eventos.</div></div>
+          </div>
+          <div class="upcoming-card">
+            <h4>Próximos prazos</h4>
+            <div class="upcoming-list" id="upcomingList"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<div id="toast-container"></div>
+<script src="../js/api.js"></script>
+<script>
+  if (!isLoggedIn()) window.location.href = '../index.html';
+  const user = getUser();
+  document.getElementById('sidebar-name').textContent  = user?.name  || '—';
+  document.getElementById('sidebar-email').textContent = user?.email || '—';
+  document.getElementById('sidebar-avatar').textContent = user?.avatar || '';
+  function doLogout(){ clearSession(); window.location.href='../index.html'; }
+  document.querySelector('.btn-menu').addEventListener('click',()=>{document.querySelector('.sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('show');});
+  document.querySelector('.sidebar-overlay').addEventListener('click',()=>{document.querySelector('.sidebar').classList.remove('open');document.querySelector('.sidebar-overlay').classList.remove('show');});
+
+  const MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const today  = new Date();
+  let curYear  = today.getFullYear();
+  let curMonth = today.getMonth();
+  let selDate  = null;
+  let eventsMap = {};
+
+  function statusLabel(s){ return {todo:'A fazer',doing:'Em andamento',done:'Concluído'}[s]||s; }
+
+  async function loadEvents() {
+    const [tRes, pRes] = await Promise.all([getUserTasks(), getProjects()]);
+    eventsMap = {};
+    const add = (dateStr, item) => {
+      if (!dateStr) return;
+      const key = dateStr.slice(0,10);
+      if (!eventsMap[key]) eventsMap[key] = [];
+      eventsMap[key].push(item);
+    };
+    if (tRes.ok) tRes.data.tasks.forEach(t => {
+      if (!t.deadline) return;
+      const over = new Date(t.deadline)<new Date() && t.status!=='done';
+      add(t.deadline, { type: over?'overdue':'task', title:t.title, sub:t.project_name||'', status:t.status });
+    });
+    if (pRes.ok) pRes.data.projects.forEach(p => {
+      if (!p.deadline) return;
+      add(p.deadline, { type:'project', title:`📁 ${p.name}`, sub:'Prazo do projeto' });
+    });
+    renderCalendar();
+    selectDay(today.getFullYear(), today.getMonth(), today.getDate());
+  }
+
+  function renderCalendar() {
+    document.getElementById('calMonthLabel').textContent = `${MONTHS[curMonth]} ${curYear}`;
+    const firstDay = new Date(curYear,curMonth,1).getDay();
+    const daysInMonth = new Date(curYear,curMonth+1,0).getDate();
+    const daysInPrev  = new Date(curYear,curMonth,0).getDate();
+    let html = ''; let dayCount = 0;
+    for (let i=firstDay-1;i>=0;i--){ html+=dayCell(curYear,curMonth-1,daysInPrev-i,true); dayCount++; }
+    for (let d=1;d<=daysInMonth;d++){ html+=dayCell(curYear,curMonth,d,false); dayCount++; }
+    let next=1; while(dayCount%7!==0){ html+=dayCell(curYear,curMonth+1,next++,true); dayCount++; }
+    document.getElementById('calDays').innerHTML = html;
+    renderUpcoming();
+  }
+
+  function dayCell(year,month,day,otherMonth) {
+    const date = new Date(year,month,day);
+    const key  = date.toISOString().slice(0,10);
+    const isToday = date.toDateString()===today.toDateString();
+    const isSel   = selDate && date.toDateString()===selDate.toDateString();
+    const evts    = eventsMap[key]||[];
+    const cls = ['cal-day', otherMonth?'other-month':'', isToday?'today':'', isSel?'selected':''].filter(Boolean).join(' ');
+    const dots = evts.slice(0,3).map(e=>`<div class="cal-event-dot ${e.type}" title="${e.title}">${e.title.slice(0,16)}</div>`).join('');
+    return `<div class="${cls}" onclick="selectDay(${date.getFullYear()},${date.getMonth()},${date.getDate()})">
+      <div class="cal-day-num">${day}</div>
+      <div class="cal-events">${dots}</div>
+    </div>`;
+  }
+
+  function selectDay(year,month,day) {
+    selDate = new Date(year,month,day);
+    const key  = selDate.toISOString().slice(0,10);
+    const evts = eventsMap[key]||[];
+    document.getElementById('selectedDayLabel').textContent = selDate.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
+    const container = document.getElementById('selectedDayEvents');
+    container.innerHTML = evts.length ? evts.map(e=>`
+      <div class="cal-day-event-item">
+        <div class="event-dot ${e.type}"></div>
+        <div class="event-info">
+          <div class="event-title">${e.title}</div>
+          ${e.sub?`<div class="event-meta">${e.sub}</div>`:''}
+          ${e.status?`<div class="event-meta">${statusLabel(e.status)}</div>`:''}
+        </div>
+      </div>`).join('')
+    : '<div class="cal-no-events">Nenhum evento neste dia.</div>';
+    renderCalendar();
+  }
+
+  function renderUpcoming() {
+    const now = new Date();
+    const list = [];
+    Object.entries(eventsMap).forEach(([key,evts]) => {
+      const d = new Date(key);
+      if (d>=now) evts.forEach(e=>list.push({date:d,...e}));
+    });
+    list.sort((a,b)=>a.date-b.date);
+    const el = document.getElementById('upcomingList');
+    el.innerHTML = list.slice(0,6).map(item=>`
+      <div class="upcoming-item">
+        <div class="up-date"><div class="up-day">${item.date.getDate()}</div><div class="up-month">${MONTHS[item.date.getMonth()].slice(0,3)}</div></div>
+        <div class="up-info"><div class="up-title">${item.title}</div><div class="up-sub">${item.sub||''}</div></div>
+        <div class="event-dot ${item.type}" style="width:8px;height:8px;border-radius:50%;flex-shrink:0"></div>
+      </div>`).join('') || '<div class="cal-no-events">Nenhum prazo próximo.</div>';
+  }
+
+  function changeMonth(dir) {
+    curMonth+=dir;
+    if(curMonth>11){curMonth=0;curYear++;}
+    if(curMonth<0){curMonth=11;curYear--;}
+    renderCalendar();
+  }
+  function goToday() { curYear=today.getFullYear(); curMonth=today.getMonth(); selDate=today; renderCalendar(); selectDay(today.getFullYear(),today.getMonth(),today.getDate()); }
+
+  loadEvents();
+</script>
+</body>
+</html>

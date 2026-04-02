@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WoorkFlow — Entrar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/base.css"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #0f1117;
+      --ink-soft: #3d4150;
+      --ink-muted: #8b90a0;
+      --surface: #ffffff;
+      --surface-2: #f7f8fa;
+      --border: #e8eaef;
+      --blue: #2f6de4;
+      --blue-dark: #1f56c8;
+      --blue-glow: rgba(47,109,228,.12);
+      --green: #18a87a;
+      --red: #e03d3d;
+    }
+
+    body {
+      font-family: 'Figtree', sans-serif;
+      background: var(--surface-2);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 4px 24px rgba(0,0,0,.06);
+      animation: fadeUp .45s ease both;
+    }
+
+    /* ── Brand ── */
+    .brand {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .brand-name {
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -.5px;
+      color: var(--ink);
+    }
+    .brand-name span { color: var(--blue); }
+    .brand-tagline {
+      font-size: .825rem;
+      color: var(--ink-muted);
+      margin-top: 4px;
+    }
+
+    /* ── Tabs ── */
+    .tab-row {
+      display: flex;
+      background: var(--surface-2);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 28px;
+      position: relative;
+    }
+    .tab-btn {
+      flex: 1; background: none; border: none;
+      font-family: 'Figtree', sans-serif;
+      font-size: .875rem; font-weight: 600;
+      color: var(--ink-muted);
+      padding: 9px 14px;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: color .2s;
+      position: relative; z-index: 1;
+    }
+    .tab-btn.active { color: var(--ink); }
+    .tab-indicator {
+      position: absolute;
+      top: 4px; bottom: 4px; left: 4px;
+      width: calc(50% - 4px);
+      background: var(--surface);
+      border-radius: 9px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+      transition: transform .3s cubic-bezier(.4,0,.2,1);
+    }
+    .tab-indicator.right { transform: translateX(100%); }
+
+    /* ── Form panels ── */
+    .form-panel { display: none; }
+    .form-panel.active { display: block; animation: fadeUp .3s ease both; }
+
+    /* ── Fields ── */
+    .field { margin-bottom: 14px; }
+    .field label {
+      display: block;
+      font-size: .8rem; font-weight: 600;
+      color: var(--ink-soft);
+      margin-bottom: 6px;
+    }
+    .field input {
+      width: 100%;
+      background: var(--surface-2);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      color: var(--ink);
+      font-family: 'Figtree', sans-serif;
+      font-size: .9rem;
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color .2s, background .2s, box-shadow .2s;
+    }
+    .field input:focus {
+      background: var(--surface);
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px var(--blue-glow);
+    }
+    .field input::placeholder { color: #c2c5d0; }
+
+    .field-row { display: flex; gap: 10px; }
+    .field-row .field { flex: 1; margin-bottom: 0; }
+
+    /* Password */
+    .pw-wrap { position: relative; }
+    .pw-wrap input { padding-right: 42px; }
+    .pw-toggle {
+      position: absolute; right: 12px; top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none;
+      color: var(--ink-muted); cursor: pointer; font-size: 15px;
+      transition: color .2s;
+    }
+    .pw-toggle:hover { color: var(--ink); }
+
+    /* Strength */
+    .strength-bar { display: flex; gap: 4px; margin-top: 7px; }
+    .strength-bar span { flex: 1; height: 3px; border-radius: 99px; background: var(--border); transition: background .3s; }
+    .strength-label { font-size: .72rem; font-weight: 600; margin-top: 5px; }
+
+    /* Row between */
+    .row-between {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin: 4px 0 18px;
+    }
+    .check-label {
+      display: flex; align-items: center; gap: 7px;
+      font-size: .825rem; color: var(--ink-muted); cursor: pointer;
+    }
+    .check-label input[type=checkbox] { accent-color: var(--blue); }
+    .link-btn {
+      background: none; border: none;
+      color: var(--blue); font-size: .825rem;
+      cursor: pointer; font-family: inherit; font-weight: 600;
+    }
+    .link-btn:hover { text-decoration: underline; }
+
+    /* Terms */
+    .terms {
+      font-size: .78rem; color: var(--ink-muted);
+      margin-bottom: 16px; line-height: 1.55;
+    }
+    .terms a { color: var(--blue); text-decoration: none; font-weight: 600; }
+
+    /* Submit */
+    .btn-submit {
+      width: 100%; padding: 11px;
+      background: var(--blue);
+      border: none; border-radius: 10px;
+      color: #fff;
+      font-family: 'Figtree', sans-serif;
+      font-weight: 700; font-size: .95rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background .2s, transform .1s, box-shadow .2s;
+      box-shadow: 0 3px 14px rgba(47,109,228,.22);
+    }
+    .btn-submit:hover { background: var(--blue-dark); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(47,109,228,.3); }
+    .btn-submit:active { transform: translateY(0); }
+    .btn-submit .spinner {
+      width: 16px; height: 16px; display: none;
+      border: 2px solid rgba(255,255,255,.3); border-top-color: #fff;
+      border-radius: 50%; animation: spin .6s linear infinite;
+    }
+    .btn-submit.loading .btn-text { display: none; }
+    .btn-submit.loading .spinner  { display: block; }
+
+    /* Alert */
+    .alert {
+      display: none; align-items: center; gap: 8px;
+      padding: 9px 12px; border-radius: 9px;
+      font-size: .825rem; font-weight: 500; margin-bottom: 14px;
+    }
+    .alert.show   { display: flex; }
+    .alert.error  { background: #fef2f2; border: 1.5px solid #fecaca; color: var(--red); }
+    .alert.success{ background: #f0fdf8; border: 1.5px solid #a7f3d0; color: var(--green); }
+
+    @media (max-width: 480px) {
+      .card { padding: 30px 20px; }
+      .field-row { flex-direction: column; }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- Brand -->
+  <div class="brand">
+    <div class="brand-name">Woork<span>Flow</span></div>
+    <div class="brand-tagline">Gerencie projetos e tarefas com facilidade</div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tab-row">
+    <div class="tab-indicator" id="tabIndicator"></div>
+    <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')">Entrar</button>
+    <button class="tab-btn" id="tabRegister" onclick="switchTab('register')">Criar conta</button>
+  </div>
+
+  <!-- LOGIN -->
+  <div class="form-panel active" id="panelLogin">
+    <div class="alert error" id="loginError"><span>⚠</span><span id="loginErrorMsg"></span></div>
+    <div class="alert success" id="loginSuccess"><span>✓</span><span>Login realizado! Redirecionando…</span></div>
+
+    <div class="field">
+      <label>E-mail</label>
+      <input type="email" id="loginEmail" placeholder="seu@email.com" autocomplete="email"/>
+    </div>
+    <div class="field">
+      <label>Senha</label>
+      <div class="pw-wrap">
+        <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password"/>
+        <button class="pw-toggle" onclick="togglePw('loginPassword',this)" type="button">👁</button>
+      </div>
+    </div>
+    <div class="row-between">
+      <label class="check-label">
+        <input type="checkbox" id="rememberMe"/> Lembrar de mim
+      </label>
+      <button class="link-btn" onclick="forgotPw()">Esqueci a senha</button>
+    </div>
+    <button class="btn-submit" id="loginBtn" onclick="handleLogin()">
+      <span class="btn-text">Entrar</span>
+      <div class="spinner"></div>
+    </button>
+  </div>
+
+  <!-- REGISTER -->
+  <div class="form-panel" id="panelRegister">
+    <div class="alert error" id="registerError"><span>⚠</span><span id="registerErrorMsg"></span></div>
+    <div class="alert success" id="registerSuccess"><span>✓</span><span>Conta criada! Fazendo login…</span></div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Nome</label>
+        <input type="text" id="regName" placeholder="Ana"/>
+      </div>
+      <div class="field">
+        <label>Sobrenome</label>
+        <input type="text" id="regLastName" placeholder="Silva"/>
+      </div>
+    </div>
+    <div class="field">
+      <label>E-mail</label>
+      <input type="email" id="regEmail" placeholder="seu@email.com"/>
+    </div>
+    <div class="field">
+      <label>Senha</label>
+      <div class="pw-wrap">
+        <input type="password" id="regPassword" placeholder="Mínimo 8 caracteres" oninput="checkStrength(this.value)"/>
+        <button class="pw-toggle" onclick="togglePw('regPassword',this)" type="button">👁</button>
+      </div>
+      <div class="strength-bar">
+        <span id="s1"></span><span id="s2"></span><span id="s3"></span><span id="s4"></span>
+      </div>
+      <div class="strength-label" id="strengthLabel"></div>
+    </div>
+    <div class="field">
+      <label>Confirmar senha</label>
+      <div class="pw-wrap">
+        <input type="password" id="regConfirm" placeholder="Repita a senha"/>
+        <button class="pw-toggle" onclick="togglePw('regConfirm',this)" type="button">👁</button>
+      </div>
+    </div>
+    <div class="terms">
+      Ao criar uma conta, você concorda com os
+      <a href="#">Termos de Uso</a> e a <a href="#">Política de Privacidade</a>.
+    </div>
+    <button class="btn-submit" id="registerBtn" onclick="handleRegister()">
+      <span class="btn-text">Criar conta</span>
+      <div class="spinner"></div>
+    </button>
+  </div>
+
+</div>
+
+<script>
+  // ── Configuração da API ──────────────────────────────────
+  const API = 'http://localhost:3001/api';
+  const $   = id => document.getElementById(id);
+
+  // Redireciona se já estiver logado
+  if (localStorage.getItem('wf_token')) {
+    window.location.href = 'pages/dashboard.html';
+  }
+
+  // ── Funções de UI ────────────────────────────────────────
+  function switchTab(tab) {
+    const isLogin = tab === 'login';
+    $('tabIndicator').classList.toggle('right', !isLogin);
+    $('tabLogin').classList.toggle('active', isLogin);
+    $('tabRegister').classList.toggle('active', !isLogin);
+    $('panelLogin').classList.toggle('active', isLogin);
+    $('panelRegister').classList.toggle('active', !isLogin);
+    ['loginError','loginSuccess','registerError','registerSuccess']
+      .forEach(id => $(id).classList.remove('show'));
+  }
+
+  function togglePw(id, btn) {
+    const inp = $(id), show = inp.type === 'password';
+    inp.type = show ? 'text' : 'password';
+    btn.textContent = show ? '🙈' : '👁';
+  }
+
+  const SC = { 0:'#e8eaef', 1:'#e03d3d', 2:'#f97316', 3:'#eab308', 4:'#18a87a' };
+  const SL = { 0:'', 1:'Muito fraca', 2:'Fraca', 3:'Boa', 4:'Forte' };
+  function checkStrength(val) {
+    let s = 0;
+    if (val.length >= 8) s++;
+    if (/[A-Z]/.test(val)) s++;
+    if (/[0-9]/.test(val)) s++;
+    if (/[^A-Za-z0-9]/.test(val)) s++;
+    for (let i = 1; i <= 4; i++) $('s'+i).style.background = i <= s ? SC[s] : SC[0];
+    $('strengthLabel').textContent = val ? SL[s] : '';
+    $('strengthLabel').style.color = SC[s];
+  }
+
+  function showErr(form, msg) {
+    const errId = form === 'login' ? 'loginError' : 'registerError';
+    const msgId = form === 'login' ? 'loginErrorMsg' : 'registerErrorMsg';
+    $(msgId).textContent = msg;
+    $(errId).className = 'alert error show';
+  }
+
+  function saveSession(token, user) {
+    localStorage.setItem('wf_token', token);
+    localStorage.setItem('wf_user',  JSON.stringify(user));
+  }
+
+  // ── Login ────────────────────────────────────────────────
+  async function handleLogin() {
+    ['loginError','loginSuccess'].forEach(id => $(id).classList.remove('show'));
+    const email = $('loginEmail').value.trim();
+    const pass  = $('loginPassword').value;
+    if (!email || !pass) return showErr('login', 'Preencha todos os campos.');
+
+    const btn = $('loginBtn');
+    btn.classList.add('loading'); btn.disabled = true;
+
+    try {
+      const res  = await fetch(`${API}/auth/login`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ email, password: pass }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) return showErr('login', data.error || 'Erro ao fazer login.');
+
+      saveSession(data.token, data.user);
+      $('loginSuccess').className = 'alert success show';
+      setTimeout(() => window.location.href = 'pages/dashboard.html', 700);
+
+    } catch (err) {
+      showErr('login', 'Não foi possível conectar ao servidor. Verifique se o backend está rodando.');
+    } finally {
+      btn.classList.remove('loading'); btn.disabled = false;
+    }
+  }
+
+  // ── Cadastro ─────────────────────────────────────────────
+  async function handleRegister() {
+    ['registerError','registerSuccess'].forEach(id => $(id).classList.remove('show'));
+    const name     = $('regName').value.trim();
+    const lastName = $('regLastName').value.trim();
+    const email    = $('regEmail').value.trim();
+    const pass     = $('regPassword').value;
+    const confirm  = $('regConfirm').value;
+
+    if (!name || !lastName || !email || !pass || !confirm)
+      return showErr('register', 'Preencha todos os campos.');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      return showErr('register', 'E-mail inválido.');
+    if (pass.length < 8)
+      return showErr('register', 'Senha deve ter pelo menos 8 caracteres.');
+    if (pass !== confirm)
+      return showErr('register', 'As senhas não coincidem.');
+
+    const btn = $('registerBtn');
+    btn.classList.add('loading'); btn.disabled = true;
+
+    try {
+      const res  = await fetch(`${API}/auth/register`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ name, lastName, email, password: pass }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) return showErr('register', data.error || 'Erro ao criar conta.');
+
+      saveSession(data.token, data.user);
+      $('registerSuccess').className = 'alert success show';
+      setTimeout(() => window.location.href = 'pages/dashboard.html', 700);
+
+    } catch (err) {
+      showErr('register', 'Não foi possível conectar ao servidor. Verifique se o backend está rodando.');
+    } finally {
+      btn.classList.remove('loading'); btn.disabled = false;
+    }
+  }
+
+  function forgotPw() {
+    const email = $('loginEmail').value.trim();
+    if (!email) return showErr('login', 'Digite seu e-mail no campo acima primeiro.');
+    alert(`📧 Instruções enviadas para: ${email}\n\n(Integração de e-mail disponível em breve.)`);
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+    if ($('panelLogin').classList.contains('active')) handleLogin();
+    else handleRegister();
+  });
+</script>
+</body>
+</html>
